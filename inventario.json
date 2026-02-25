@@ -1,0 +1,17 @@
+[
+    {"id": 1,"nombre": "Borde ballena","precio": 111.0,"categoria": "BALDOSAS","stock": 23,"material": "111","medida": 111.0},
+    {"id": 2,"nombre": "Esquinero","precio": 666.0,"categoria": "BALDOSAS","stock": 32,"material": "666","medida": 666.0},
+    {"id": 3,"nombre": "Solarium","precio": 444.0,"categoria": "BALDOSAS","stock": 1,"material": "444","medida": 444.0},
+    {"id": 4,"nombre": "Rejilla","precio": 333.0,"categoria": "BALDOSAS","stock": 61,"material": "333","medida": 333.0},
+    {"id": 5,"nombre": "Deck","precio": 222.0,"categoria": "BALDOSAS","stock": 24,"material": "222","medida": 222.0},
+    {
+  "id": 6,
+  "nombre": "Margaretia",
+  "precio": 90000.0,
+  "categoria": "PILETAS",
+  "stock": 5,
+  "capacidad": 500,
+  "forma": "circular"
+},
+    {"id": 7,"nombre": "LALA","precio": 9000.0,"categoria": "PINTURAS","stock": 8,"color": "Blanco","litros": 58}
+]

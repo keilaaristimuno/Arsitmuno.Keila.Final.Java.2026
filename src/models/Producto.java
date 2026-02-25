@@ -9,10 +9,7 @@ public abstract class Producto implements Comparable <Producto> {
     protected double precio;
     protected Categoria categoria;
     protected int stock;
-    
-    //constructor:
-     public Producto(){}
-     
+         
     public Producto (int id, String nombre, double precio, Categoria categoria, int stock ){
         this.id= id;
         this.nombre = nombre;
