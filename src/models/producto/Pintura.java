@@ -75,9 +75,9 @@ public class Pintura extends Producto implements Exportable, Serializable  {
     @Override
     public String getCSV() {
         return getId()        + "," +
+               getCategoria() + "," +
                getNombre()    + "," +
                getPrecio()    + "," +
-               getCategoria() + "," +
                getStock()     + "," +
                color          + "," +
                litros;

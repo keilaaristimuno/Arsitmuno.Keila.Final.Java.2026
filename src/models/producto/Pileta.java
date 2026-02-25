@@ -80,9 +80,9 @@ public class Pileta extends Producto implements Exportable, Serializable{
     @Override
     public String getCSV() {
         return getId()        + "," +
-               getNombre()    + "," +
-               getPrecio()    + "," +
-               getCategoria() + "," +
+               getCategoria()    + "," +
+               getNombre()  + "," +
+               getPrecio()+ "," +
                getStock()     + "," +
                capacidad      + "," +
                forma;
