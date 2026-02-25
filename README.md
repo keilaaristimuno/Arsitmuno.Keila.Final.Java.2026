@@ -29,7 +29,7 @@ Para garantizar la integridad y portabilidad de la información, la aplicación 
 
 ---
 ## 📊 Diagrama de Clases UML
-![UML.png](UML.png)
+![UML.png](src/Img/UML.png)
 ---
 > **Proyecto Final - Programación II**
 > **Año:** 2026
