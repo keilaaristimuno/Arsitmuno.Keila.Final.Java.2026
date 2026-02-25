@@ -9,6 +9,15 @@ Este proyecto final para la materia Programación II consiste en un sistema de g
 El sistema es una solución integral diseñada para el control administrativo de productos como **baldosas atérmicas, piletas y pinturas**. 
 Permite un manejo eficiente del inventario, facilitando la organización y el seguimiento de existencias.
 
+## Requisitos
+* JDK 21
+* Las librerías necesarias están incluidas en la carpeta `/lib` del proyecto.
+
+## Cómo ejecutar
+1. Clonar el repositorio.
+2. Abrir el proyecto con NetBeans.
+3. Si aparecen errores de librerías, ir a Propiedades del Proyecto -> Libraries y re-vincular los archivos JAR desde la carpeta `/lib`.
+
 ### Operaciones (CRUD)
 A través de una interfaz gráfica intuitiva, el usuario puede realizar las siguientes acciones:
 **Agregar:** Registrar nuevos productos con sus atributos específicos (ID, nombre, precio, stock, etc.).
