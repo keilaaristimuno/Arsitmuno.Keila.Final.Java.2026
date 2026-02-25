@@ -32,13 +32,25 @@ Para garantizar la integridad y portabilidad de la información, la aplicación 
 3. **Serialización Binaria (.dat):** Almacenamiento de objetos Java mediante `ObjectOutputStream`.
 
 ---
-## 🖼️ Capturas de Pantalla
-### Interfaz de JavaFX
-![Gestión de Productos - UI](ruta-imagen.png)
-
----
 ## 📊 Diagrama de Clases UML
 ![UML.png](src/Img/UML.png)
+
+---
+## 🖼️ Capturas de Pantalla
+### Interfaz de JavaFX
+Tabla principal
+![Gestión de Productos - UI](src/Img/GestionTablaPrincipal.png)
+Se agregan los productos
+![Gestión de Productos - UI](src/Img/AgregarProductoCategoria.png)
+Los detalles de cada producto
+![Gestión de Productos - UI](src/Img/Detalles.png)
+Metodo filtrar
+![Gestión de Productos - UI](src/Img/Filtrar.png)
+Metodo Ordenar por Nombre, Precio o Stock
+![Gestión de Productos - UI](src/Img/Ordenar.png)
+Metodo eliminar producto por Id
+![Gestión de Productos - UI](src/Img/EliminarProducto.png)
+
 ---
 > **Proyecto Final - Programación II**
 > **Año:** 2026
