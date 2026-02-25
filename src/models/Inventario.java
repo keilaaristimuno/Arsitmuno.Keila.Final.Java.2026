@@ -86,7 +86,7 @@ public class Inventario implements Crud, Iterable<Producto>, Exportable{
             e.printStackTrace();
         }        
     }
-    
+    //cual es el siguiente id que falta en la lista 
     public int getNextID(){
         this.ordenarPorId();
         for(int i = 0; i < productos.size(); i++){

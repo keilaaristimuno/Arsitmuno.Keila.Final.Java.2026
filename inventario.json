@@ -1,0 +1,9 @@
+[
+    {"id": 1,"nombre": "rgsedfaswef","precio": 111.0,"categoria": "BALDOSAS","stock": 23,"material": "111","medida": 111.0},
+    {"id": 2,"nombre": "wadebtabwer","precio": 666.0,"categoria": "BALDOSAS","stock": 32,"material": "666","medida": 666.0},
+    {"id": 3,"nombre": "wdrbaerb","precio": 444.0,"categoria": "BALDOSAS","stock": 1,"material": "444","medida": 444.0},
+    {"id": 4,"nombre": "wdasdvw","precio": 333.0,"categoria": "BALDOSAS","stock": 61,"material": "333","medida": 333.0},
+    {"id": 5,"nombre": "aasdas","precio": 222.0,"categoria": "BALDOSAS","stock": 24,"material": "222","medida": 222.0},
+    {"id": 6,"nombre": "sdsda","precio": 555.0,"categoria": "BALDOSAS","stock": 54,"material": "555","medida": 555.0},
+    {"id": 7,"nombre": "sdfs","precio": 564.0,"categoria": "PINTURAS","stock": 21,"color": "12","litros": 52}
+]

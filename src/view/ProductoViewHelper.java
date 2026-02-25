@@ -1,6 +1,7 @@
 package view;
 
 import java.util.List;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,22 +17,23 @@ public class ProductoViewHelper {
      * @brief Crea una tabla con columnas para mostrar los productos.
      * @return La tabla creada con las columnas configuradas.
     */
-    public static TableView<Producto> crearTabla(){
+   public static TableView<Producto> crearTabla(){
         TableView<Producto> tabla = new TableView<>();
         
-        TableColumn<Producto, Integer> colId = new TableColumn<>("ID");
+        TableColumn<Producto, Integer> tableRowId = new TableColumn<>("ID");
         TableColumn<Producto, String> colNombre = new TableColumn<>("Nombre");
         TableColumn<Producto, Double> colPrecio = new TableColumn<>("Precio");
         TableColumn<Producto, String> colCategoria = new TableColumn<>("Categoria");
         TableColumn<Producto, Integer> colStock = new TableColumn<>("Stock");
         
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableRowId.setCellValueFactory(cd -> new SimpleIntegerProperty(tabla.getItems().indexOf(cd.getValue()) +1).asObject());
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
-        tabla.getColumns().addAll(colId, colNombre, colPrecio, colCategoria, colStock);
+        tabla.getColumns().addAll(tableRowId, colNombre, colPrecio, colCategoria, colStock);
+        //las columnas ocupan el ancho disponible
         tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         return tabla;
     }
@@ -71,7 +73,7 @@ public class ProductoViewHelper {
      * @param inv El inventario del cual se obtendrán los productos.
     */
     public static void refreshTableView(TableView<Producto> tableView, Inventario inv) {
-        tableView.setItems(FXCollections.observableArrayList(inv.getListaProductos()));
+        tableView.getItems().setAll(inv.getListaProductos());
     }
 
     /* 

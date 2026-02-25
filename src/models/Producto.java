@@ -11,6 +11,7 @@ public abstract class Producto implements Comparable <Producto> {
     protected int stock;
     
     //constructor:
+     public Producto(){}
      
     public Producto (int id, String nombre, double precio, Categoria categoria, int stock ){
         this.id= id;
@@ -54,12 +55,15 @@ public abstract class Producto implements Comparable <Producto> {
         return Integer.compare(this.getId(),otro.getId());
     }
     
-    /*especificadores de formato.
-    %d (Digit), %s (String), %.2f (Float/Double)
-    */
     @Override
     public String toString() {
-        return String.format("%d | %s | %.2f | %s | %d", id, nombre, precio, categoria, stock);
+        StringBuilder sb = new StringBuilder();
+        sb.append("ID: ").append(id).append("\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Precio: ").append(precio).append("\n");
+        sb.append("Categoría: ").append(categoria).append("\n");
+        sb.append("Stock: ").append(stock).append("\n");
+        return sb.toString();
     }
     
     public abstract String getTXT();

@@ -1,19 +1,27 @@
 package view;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import models.*;
 import models.producto.*;
 
 public class ProductoDialogs {
-
+    
     //muestra un dialogo para crear un nuevo producto, con campos dinámicos según el tipo seleccionado.
     /*@param inv El inventario para asignar un ID único al nuevo producto.
      * @return El producto creado o null si se cancela el diálogo.     */
 
     public static Producto dialogoCrearProducto(Inventario inv) {
         Dialog<Producto> dialog = crearDialog();
+        
+        // 1. Recuperar el ButtonType que creamos en crearDialog
+    // Buscamos el que tiene la data OK_DONE
+    ButtonType crearBtnType = dialog.getDialogPane().getButtonTypes().stream()
+            .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
+            .findFirst().orElse(null);
+        
         ChoiceBox<String> tipo = crearChoiceTipo();
         TextField nombre = new TextField();
         TextField precio = new TextField();
@@ -22,19 +30,32 @@ public class ProductoDialogs {
         TextField extra2 = new TextField();
         Label l1 = new Label("Material");
         Label l2 = new Label("Medida");
+        final Producto[] productoTemp = new Producto[1];
         
         configurarCambioTipo(tipo, l1, l2);
         
         GridPane grid = crearGrid(tipo, nombre, precio, stock, l1, extra1, l2, extra2);
         dialog.getDialogPane().setContent(grid);
         
-        ButtonType crearBtn = dialog.getDialogPane().getButtonTypes().get(0);
+        // Obtener botón OK
+       //ButtonType crearBtn = dialog.getDialogPane().getButtonTypes().get(0);
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(crearBtnType);
+        //  Evitar que cierre si hay error
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+            Producto p = construirProducto(inv, tipo, nombre, precio, stock, extra1, extra2);
+            if (p == null) {
+                event.consume(); //  No se cierra
+            }else {
+                productoTemp[0] = p; // Guardamos el producto creado
+            }
+        });
         
-        dialog.setResultConverter(btn ->
-                btn == crearBtn
-                        ? construirProducto(inv, tipo, nombre, precio, stock, extra1, extra2)
-                        : null
-        );
+        dialog.setResultConverter(btn -> {
+            if ( btn == crearBtnType){
+                return productoTemp [0];
+            }
+            return null;
+        });
         return dialog.showAndWait().orElse(null);
     }
     
@@ -122,29 +143,44 @@ public class ProductoDialogs {
             TextField extra2
     ) {
 
-        String n = nombre.getText();
-        double p = Double.parseDouble(precio.getText());
-        int s = Integer.parseInt(stock.getText());
-        int i = inv.getNextID();
+        try {
+            String n = nombre.getText();
+            double p = Double.parseDouble(precio.getText());
+            int s = Integer.parseInt(stock.getText());
+            int i = inv.getNextID();
 
-        return switch (tipo.getValue()) {
-            case "Pileta" ->
-                    new Pileta(i, n, p, s,
-                            Integer.parseInt(extra1.getText()),
-                            extra2.getText());
+            return switch (tipo.getValue()) {
+                case "Pileta" ->
+                        new Pileta(i, n, p, s,
+                                Integer.parseInt(extra1.getText()),
+                                extra2.getText());
 
-            case "Pintura" ->
-                    new Pintura(i, n, p, s,
-                            extra1.getText(),
-                            Integer.parseInt(extra2.getText()));
+                case "Pintura" ->
+                        new Pintura(i, n, p, s,
+                                extra1.getText(),
+                                Integer.parseInt(extra2.getText()));
 
-            case "Baldosa" ->
-                    new Baldosa(i, n, p, s,
-                            extra1.getText(),
-                            Double.parseDouble(extra2.getText()));
+                case "Baldosa" ->
+                        new Baldosa(i, n, p, s,
+                                extra1.getText(),
+                                Double.parseDouble(extra2.getText()));
 
-            default -> null;
-        };
+                default -> null;
+
+                };
+            }  catch (NumberFormatException e){
+                mostrarError ( "Ingresa un valor numerico valido");
+                return null;                    
+        
+        }
+    }
+    
+    private static void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     /* 
@@ -154,6 +190,8 @@ public class ProductoDialogs {
     public static String dialogoSeleccionarCriterio() {
         ChoiceDialog<String> dialog =
                 new ChoiceDialog<>("Precio", "Precio", "Nombre", "Stock");
+        dialog.setTitle("Ordenar");
+        dialog.setHeaderText("Ordenar por: ");
         return dialog.showAndWait().orElse(null);
     }
 
@@ -163,6 +201,9 @@ public class ProductoDialogs {
     */
     public static String dialogoIngresarFiltro() {
         TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Filtracion");
+        dialog.setHeaderText("Filtro por nombre");
+        dialog.setContentText("Ingrese el nombre: ");
         return dialog.showAndWait().orElse(null);
     }
 
@@ -172,6 +213,9 @@ public class ProductoDialogs {
     */
     public static int dialogoIngresarId() {
         TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Atencion");
+        dialog.setHeaderText("Eliminar producto");
+         dialog.setContentText("Ingrese el ID: ");
         try {
             return Integer.parseInt(dialog.showAndWait().orElse("-1"));
         } catch (Exception e) {

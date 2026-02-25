@@ -73,5 +73,8 @@ public class GestionProducto {
     public void ordenarPorNombre(){
         inventario.ordenar(new NombreComparator());
     }
-    
+
+    public Inventario getInventario() {
+        return inventario;
+    }  
 }

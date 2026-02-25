@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import models.Producto;
@@ -14,8 +15,10 @@ import java.util.Map;
 import models.producto.Baldosa;
 import models.producto.Pileta;
 import models.producto.Pintura;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-public class JSONService implements Persistencia {
+public class JSONService implements Persistencia <Producto> {
     private final String path;
     
     public JSONService(String path) {
@@ -68,9 +71,9 @@ public class JSONService implements Persistencia {
             String[] pairs = product.split(",");
 
             for(String pair : pairs){
-                String[] kv = pair.split(":");
-                String key = kv[0];
-                String value = kv[1];
+                String[] kv = pair.split(":", 2);
+                String key = kv[0].trim().replace("\"", "");
+                String value = kv[1].trim().replace("\"", "");
                 map.put(key,value);
             }
             list.add(map);
@@ -82,26 +85,19 @@ public class JSONService implements Persistencia {
     @Override
     public List<Producto> cargar() {
         List<Producto> lista = new ArrayList<>();
-        List<Map<String, String>> maplista = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(path))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            String json = sb.toString();
-            maplista = this.parseJSON(json);
-
-            for(Map<String, String> map : maplista){
+            Gson gson = new Gson();
+            Type tipoLista = new TypeToken<List<Map<String, String>>>() {}.getType();
+            List<Map<String, String>> maplista = gson.fromJson(reader, tipoLista);
+            
+            for (Map<String, String> map : maplista) {
                 String categoria = map.get("categoria");
-
-                lista.add(
-                    (categoria == "BALDOSAS")? new Baldosa(map):
-                    (categoria == "PILETAS")?  new Pileta(map):
-                                               new Pintura(map)
-                );
+                switch (categoria) {
+                    case "BALDOSAS" -> lista.add(new Baldosa(map));
+                    case "PILETAS" -> lista.add(new Pileta(map));
+                    case "PINTURAS" -> lista.add(new Pintura(map));
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import java.io.File;
 
 import models.*;
 import models.producto.Baldosa;
@@ -12,43 +14,93 @@ import services.GestionProducto;
 
 public class AppFX extends Application {
 
+    private ProductoController controller;
     private TableView<Producto> tableView = ProductoViewHelper.crearTabla();
 
     private Inventario crearInventarioConDatos() {
         Inventario inventario = new Inventario();
 
-        inventario.crear(new Baldosa(inventario.getNextID(), "rgsedfaswef", 111, 23, "111", 111));
-        inventario.crear(new Baldosa(inventario.getNextID(), "wadebtabwer", 666, 32, "666", 666));
-        inventario.crear(new Baldosa(inventario.getNextID(), "wdrbaerb", 444, 1, "444", 444));
-        inventario.crear(new Baldosa(inventario.getNextID(), "wdasdvw", 333, 61, "333", 333));
-        inventario.crear(new Baldosa(inventario.getNextID(), "aasdas", 222, 24, "222", 222));
-        inventario.crear(new Baldosa(inventario.getNextID(), "sdsda", 555, 54, "555", 555));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Borde ballena", 111, 23, "111", 111));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Esquinero", 666, 32, "666", 666));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Solarium", 444, 1, "444", 444));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Rejilla", 333, 61, "333", 333));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Deck", 222, 24, "222", 222));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Borde L", 555, 54, "555", 555));
 
         return inventario;
     }
 
-    //Crea un controlador de productos
-    private ProductoController crearController(Inventario inventario) {
-        GestionProducto gestion = new GestionProducto(inventario);
-        return new ProductoController(gestion);
+
+    private String exportarDialog(){
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("CSV","CSV", "JSON", "TXT");
+        dialog.setTitle("Exportar");
+        dialog.setHeaderText("Seleccionar formato");
+        dialog.showAndWait();
+        return dialog.getSelectedItem();
     }
-/*
-    private HBox crearBarraPersistencia(ProductoController controller){
-        Button btnExportarJSON = new Button("Exportar JSON");
-        Button btnExportarCSV = new Button("Exportar CSV");
-        Button btnExportarDAT = new Button("Exportar DAT");
-        
-        btnExportarJSON.setOnAction( e -> 
-        .)
-        
+
+    private File importarDialog(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Importar Archivo");
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Archivos CSV", "*.csv"),
+                new FileChooser.ExtensionFilter("Archivos JSON", "*.json")
+        );
+
+        File archivo = fileChooser.showOpenDialog(stage);
+
+        if (archivo != null){
+            String nombre = archivo.getName().toLowerCase();
+
+            if (nombre.endsWith(".csv") || nombre.endsWith(".json")){
+                return archivo;
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error de formato");
+                alert.setHeaderText("Archivo no soportado");
+                alert.setContentText("Por favor, selecciona un archivo CSV, JSON o DAT.");
+                alert.showAndWait();
+                return null;
+            }
+        }
+
+        return null;
     }
     
-    */
+   private HBox crearBarraExportar(Stage stage){
+        Button btnExportar = new Button("Exportar ");
+        Button btnImportar = new Button("Importar");
+        
+        btnExportar.setOnAction( e -> {
+            String formato = exportarDialog();
+            if (formato != null) {
+                if(formato == "TXT"){
+                    controller.exportarTXT();
+                } else {
+                    controller.exportar(formato.toLowerCase());
+                }
+            }
+        });
 
+        btnImportar.setOnAction( e -> {
+            File file = importarDialog(stage);
+            if (file != null) {
+                controller.importar(file);
+                
+            } else {
+                System.out.println("No se seleccionó ningún archivo");
+            }
+        });
+   
+        HBox bottom = new HBox(10, btnExportar, btnImportar );
+        bottom.setStyle("-fx-padding: 10;");
+        bottom.setAlignment(javafx.geometry.Pos.CENTER);
+        return bottom;
+   }
+    
     //metodo para crear una barra de botones
     private HBox crearBarraBotones(
-            ProductoController controller,
-            Inventario inventario,
             TableView<Producto> tableView
     ) {
         Button btnAgregar = new Button("Agregar");
@@ -57,7 +109,7 @@ public class AppFX extends Application {
         Button btnEliminar = new Button("Eliminar");
         Button btnReiniciar = new Button("Reiniciar");
         
-        configurarEventos(controller, inventario, tableView,
+        configurarEventos(tableView,
                 btnAgregar, btnOrdenar, btnFiltrar, btnEliminar, btnReiniciar);
 
         Region spacer = new Region();
@@ -75,8 +127,6 @@ public class AppFX extends Application {
 
 //metodo para configurar los eventos de los botones 
     private void configurarEventos(
-            ProductoController controller,
-            Inventario inventario,
             TableView<Producto> tableView,
             Button btnAgregar,
             Button btnOrdenar,
@@ -85,10 +135,11 @@ public class AppFX extends Application {
             Button btnReiniciar
     ) {
         btnAgregar.setOnAction(e -> {
-            Producto p = ProductoDialogs.dialogoCrearProducto(inventario);
+            Producto p = ProductoDialogs.dialogoCrearProducto(controller.getInventario());
             if (p != null) {
                 controller.agregar(p);
-                ProductoViewHelper.refreshTableView(tableView, inventario);
+                ProductoViewHelper.refreshTableView(tableView, controller.getInventario());
+                
             }
         });
 
@@ -96,7 +147,7 @@ public class AppFX extends Application {
             String criterio = ProductoDialogs.dialogoSeleccionarCriterio();
             if (criterio != null) {
                 controller.ordenar(criterio);
-                ProductoViewHelper.refreshTableView(tableView, inventario);
+                ProductoViewHelper.refreshTableView(tableView, controller.getInventario());
             }
         });
 
@@ -111,13 +162,13 @@ public class AppFX extends Application {
             int id = ProductoDialogs.dialogoIngresarId();
             if (id != -1) {
                 controller.eliminar(id - 1);
-                ProductoViewHelper.refreshTableView(tableView, inventario);
+                ProductoViewHelper.refreshTableView(tableView, controller.getInventario());
             }
         });
 
         btnReiniciar.setOnAction(e -> {
             controller.reiniciar();
-            ProductoViewHelper.refreshTableView(tableView, inventario);
+            ProductoViewHelper.refreshTableView(tableView, controller.getInventario());
         });
 
     }
@@ -128,8 +179,9 @@ public class AppFX extends Application {
      * @param tableView La tabla que muestra los productos.
      * @return VBox El contenedor principal de la aplicación.
      */
-    private VBox crearLayout(HBox top, TableView<Producto> tableView) {
-        VBox root = new VBox(top, tableView);
+    private VBox crearLayout(HBox top, TableView<Producto> tableView, Stage stage) {
+        HBox bottom = crearBarraExportar(stage);
+        VBox root = new VBox(top, tableView, bottom);
         VBox.setVgrow(tableView, Priority.ALWAYS);
         return root;
     }
@@ -149,13 +201,14 @@ public class AppFX extends Application {
     public void start(Stage stage) {
 
         Inventario inventario = crearInventarioConDatos();
-        ProductoController controller = crearController(inventario);
+        GestionProducto gestionProducto = new GestionProducto(inventario);
+        controller = new ProductoController(gestionProducto);
 
         TableView<Producto> tableView = ProductoViewHelper.crearTabla();
         ProductoViewHelper.cargarTableView(tableView, inventario);
 
-        HBox top = crearBarraBotones(controller, inventario, tableView);
-        VBox root = crearLayout(top, tableView);
+        HBox top = crearBarraBotones(tableView);
+        VBox root = crearLayout(top, tableView, stage);
 
         configurarStage(stage, root);
     }

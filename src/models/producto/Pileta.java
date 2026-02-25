@@ -5,10 +5,11 @@ import interfaces.Exportable;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Map;
 import models.Producto;
 
-public class Pileta extends Producto implements Exportable{
+public class Pileta extends Producto implements Exportable, Serializable{
     private int capacidad;
     private String forma;
     

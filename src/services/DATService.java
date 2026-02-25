@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-public class DATService implements Persistencia{
+public class DATService implements Persistencia <Producto>{
     private final String path;
 
     public DATService(String path) {
