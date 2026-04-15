@@ -42,14 +42,16 @@ Tabla principal
 ![Gestión de Productos - UI](src/Img/GestionTablaPrincipal.png)
 Se agregan los productos
 ![Gestión de Productos - UI](src/Img/AgregarProductoCategoria.png)
-Los detalles de cada producto
+Los detalles de cada producto, funcion eliminar, funcion editar
 ![Gestión de Productos - UI](src/Img/Detalles.png)
-Metodo filtrar
+Metodo filtrar por nombre
 ![Gestión de Productos - UI](src/Img/Filtrar.png)
 Metodo Ordenar por Nombre, Precio o Stock
 ![Gestión de Productos - UI](src/Img/Ordenar.png)
-Metodo eliminar producto por Id
+Metodo eliminar producto al tocarlo
 ![Gestión de Productos - UI](src/Img/EliminarProducto.png)
+Metodo editar producto
+![Gestión de Productos - UI](src/Img/EditarProducto.png)
 
 ---
 > **Proyecto Final - Programación II**
