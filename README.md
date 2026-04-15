@@ -48,6 +48,8 @@ Metodo filtrar por nombre
 ![Gestión de Productos - UI](src/Img/Filtrar.png)
 Metodo Ordenar por Nombre, Precio o Stock
 ![Gestión de Productos - UI](src/Img/Ordenar.png)
+Metodo Ordenar de forma ASCENDENTE o DESCENDENTE
+![Gestión de Productos - UI](src/Img/OrdenarASCyDES.png)
 Metodo eliminar producto al tocarlo
 ![Gestión de Productos - UI](src/Img/EliminarProducto.png)
 Metodo editar producto
