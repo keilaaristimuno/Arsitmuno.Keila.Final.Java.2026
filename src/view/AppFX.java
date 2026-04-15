@@ -82,12 +82,10 @@ public class AppFX extends Application {
                 }
             }
         });
-
         btnImportar.setOnAction( e -> {
             File file = importarDialog(stage);
             if (file != null) {
-                controller.importar(file);
-                
+                controller.importar(file);    
             } else {
                 System.out.println("No se seleccionó ningún archivo");
             }
@@ -112,7 +110,6 @@ public class AppFX extends Application {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
         return new HBox(10,
                 btnAgregar,
                 btnOrdenar,
