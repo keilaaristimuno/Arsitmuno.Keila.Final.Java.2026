@@ -51,6 +51,14 @@ public class Pintura extends Producto implements Exportable, Serializable  {
     public int getLitros() {
         return litros;
     }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setLitros(int litros) {
+        this.litros = litros;
+    }
     
     @Override
     public String getTXT() {

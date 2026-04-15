@@ -53,6 +53,14 @@ public class Baldosa extends Producto implements Exportable, Serializable {
         return medida;
     }
     
+    public void  setMaterial(String material){
+        this.material = material;
+    }
+    
+    public void setMedida (double medida){
+        this.medida = medida;
+    }
+    
     @Override
     public String getTXT() {
         return "ID: " + getId() + "\n" +

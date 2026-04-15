@@ -20,12 +20,12 @@ public class AppFX extends Application {
     private Inventario crearInventarioConDatos() {
         Inventario inventario = new Inventario();
 
-        inventario.crear(new Baldosa(inventario.getNextID(), "Borde ballena", 111, 23, "111", 111));
-        inventario.crear(new Baldosa(inventario.getNextID(), "Esquinero", 666, 32, "666", 666));
-        inventario.crear(new Baldosa(inventario.getNextID(), "Solarium", 444, 1, "444", 444));
-        inventario.crear(new Baldosa(inventario.getNextID(), "Rejilla", 333, 61, "333", 333));
-        inventario.crear(new Baldosa(inventario.getNextID(), "Deck", 222, 24, "222", 222));
-        inventario.crear(new Baldosa(inventario.getNextID(), "Borde L", 555, 54, "555", 555));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Borde ballena", 7500, 23, "Atermico", 40));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Esquinero", 9500, 32, "Atermico", 60));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Solarium", 6250, 1, "Atermico", 40));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Rejilla", 2650, 61, "Atermico", 35));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Deck", 10250, 24, "Cemento", 15));
+        inventario.crear(new Baldosa(inventario.getNextID(), "Borde L", 8750, 54, "Atermico", 35));
 
         return inventario;
     }
@@ -106,11 +106,9 @@ public class AppFX extends Application {
         Button btnAgregar = new Button("Agregar");
         Button btnOrdenar = new Button("Ordenar");
         Button btnFiltrar = new Button("Filtrar");
-        Button btnEliminar = new Button("Eliminar");
         Button btnReiniciar = new Button("Reiniciar");
         
-        configurarEventos(tableView,
-                btnAgregar, btnOrdenar, btnFiltrar, btnEliminar, btnReiniciar);
+        configurarEventos(tableView, btnAgregar, btnOrdenar, btnFiltrar, btnReiniciar);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -119,7 +117,6 @@ public class AppFX extends Application {
                 btnAgregar,
                 btnOrdenar,
                 btnFiltrar,
-                btnEliminar,
                 spacer,
                 btnReiniciar
         );
@@ -131,7 +128,6 @@ public class AppFX extends Application {
             Button btnAgregar,
             Button btnOrdenar,
             Button btnFiltrar,
-            Button btnEliminar,
             Button btnReiniciar
     ) {
         btnAgregar.setOnAction(e -> {
@@ -139,7 +135,6 @@ public class AppFX extends Application {
             if (p != null) {
                 controller.agregar(p);
                 ProductoViewHelper.refreshTableView(tableView, controller.getInventario());
-                
             }
         });
 
@@ -156,13 +151,6 @@ public class AppFX extends Application {
             if (filtro != null) {
                 var lista = controller.filtrar(filtro);
                 ProductoViewHelper.refreshTableViewWithFiltered(tableView, lista);
-            }
-        });
-        btnEliminar.setOnAction(e -> {
-            int id = ProductoDialogs.dialogoIngresarId();
-            if (id != -1) {
-                controller.eliminar(id - 1);
-                ProductoViewHelper.refreshTableView(tableView, controller.getInventario());
             }
         });
 
@@ -205,7 +193,7 @@ public class AppFX extends Application {
         controller = new ProductoController(gestionProducto);
 
         TableView<Producto> tableView = ProductoViewHelper.crearTabla();
-        ProductoViewHelper.cargarTableView(tableView, inventario);
+        ProductoViewHelper.cargarTableView(tableView, inventario, controller);
 
         HBox top = crearBarraBotones(tableView);
         VBox root = crearLayout(top, tableView, stage);

@@ -6,17 +6,11 @@ Precio: 111.0
 Categoría: BALDOSAS
 Stock: 23
 -----------------------
-ID: 2
-Nombre: Esquinero
-Precio: 666.0
+ID: 5
+Nombre: Deck
+Precio: 222.0
 Categoría: BALDOSAS
-Stock: 32
------------------------
-ID: 3
-Nombre: Solarium
-Precio: 444.0
-Categoría: BALDOSAS
-Stock: 1
+Stock: 24
 -----------------------
 ID: 4
 Nombre: Rejilla
@@ -24,21 +18,21 @@ Precio: 333.0
 Categoría: BALDOSAS
 Stock: 61
 -----------------------
-ID: 5
-Nombre: Deck
-Precio: 222.0
+ID: 3
+Nombre: Solarium
+Precio: 445.0
 Categoría: BALDOSAS
-Stock: 24
+Stock: 1
 -----------------------
 ID: 6
-Nombre: Margaretia
-Precio: 90000.0
-Categoría: PILETAS
-Stock: 5
+Nombre: Borde L
+Precio: 555.0
+Categoría: BALDOSAS
+Stock: 54
 -----------------------
-ID: 7
-Nombre: LALA
-Precio: 9000.0
-Categoría: PINTURAS
-Stock: 8
+ID: 2
+Nombre: Esquinero
+Precio: 666.0
+Categoría: BALDOSAS
+Stock: 32
 -----------------------

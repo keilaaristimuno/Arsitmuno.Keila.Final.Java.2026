@@ -57,6 +57,14 @@ public class Pileta extends Producto implements Exportable, Serializable{
         return forma;
     }
     
+    public void setCapacidad(int capacidad){
+        this.capacidad = capacidad;
+    }
+    
+    public void setForma( String forma ){
+        this.forma = forma;
+    }
+    
     @Override
     public String getTXT() {
         return "ID: " + getId() + "\n" +

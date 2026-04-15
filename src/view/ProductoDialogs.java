@@ -6,8 +6,73 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import models.*;
 import models.producto.*;
+import models.enums.Categoria;
 
 public class ProductoDialogs {
+    
+     public static Producto editarProducto(Producto p) {
+        Dialog<Producto> dialog = crearDialog();
+
+        ButtonType okType = dialog.getDialogPane().getButtonTypes().stream()
+                .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
+                .findFirst().orElse(null);
+
+        ChoiceBox<String> tipo = crearChoiceTipo();
+        TextField nombre = new TextField(p.getNombre());
+        TextField precio = new TextField(String.valueOf(p.getPrecio()));
+        TextField stock = new TextField(String.valueOf(p.getStock()));
+        TextField extra1 = new TextField(p.getCategoria() == Categoria.PILETAS ? String.valueOf(((Pileta) p).getCapacidad()) :
+                p.getCategoria() == Categoria.PINTURAS ? ((Pintura) p).getColor() :
+                        ((Baldosa) p).getMaterial());
+
+        TextField extra2 = new TextField(p.getCategoria() == Categoria.PILETAS ? String.valueOf(((Pileta) p).getForma()) :
+                p.getCategoria() == Categoria.PINTURAS ? String.valueOf(((Pintura) p).getLitros()) :
+                        String.valueOf(((Baldosa) p).getMedida()));
+
+        Label l1 = new Label(p.getCategoria() == Categoria.PILETAS ? "Capacidad" :
+                p.getCategoria() == Categoria.PINTURAS ? "Color" : "Material");
+
+        Label l2 = new Label(p.getCategoria() == Categoria.PILETAS ? "Forma" :
+                p.getCategoria() == Categoria.PINTURAS ? "Litros" : "Medida");
+
+        tipo.setValue(p.getClass().getSimpleName());
+
+        configurarCambioTipo(tipo, l1, l2);
+
+        GridPane grid = crearGrid(tipo, nombre, precio, stock, l1, extra1, l2, extra2);
+        dialog.getDialogPane().setContent(grid);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(okType);
+
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+            try {
+                p.setNombre(nombre.getText());
+                p.setPrecio(Double.parseDouble(precio.getText()));
+                p.setStock(Integer.parseInt(stock.getText()));
+
+                if (p.getCategoria() == Categoria.PILETAS) {
+                    Pileta pl = (Pileta) p;
+                    pl.setCapacidad(Integer.parseInt(extra1.getText()));
+                    pl.setForma(extra2.getText());
+                } else if (p.getCategoria() == Categoria.PINTURAS) {
+                    Pintura pt = (Pintura) p;
+                    pt.setColor(extra1.getText());
+                    pt.setLitros(Integer.parseInt(extra2.getText()));
+                } else if (p.getCategoria() == Categoria.BALDOSAS) {
+                    Baldosa bd = (Baldosa) p;
+                    bd.setMaterial(extra1.getText());
+                    bd.setMedida(Double.parseDouble(extra2.getText()));
+                }
+            } catch (Exception e) {
+                mostrarError("Nombre no valido");
+                event.consume();
+                return;
+            }
+        });
+
+        dialog.setResultConverter(btn -> btn == okType ? p : null);
+        return dialog.showAndWait().orElse(null);
+    }
     
     //muestra un dialogo para crear un nuevo producto, con campos dinámicos según el tipo seleccionado.
     /*@param inv El inventario para asignar un ID único al nuevo producto.
@@ -15,12 +80,9 @@ public class ProductoDialogs {
 
     public static Producto dialogoCrearProducto(Inventario inv) {
         Dialog<Producto> dialog = crearDialog();
-        
-        // 1. Recuperar el ButtonType que creamos en crearDialog
-    // Buscamos el que tiene la data OK_DONE
-    ButtonType crearBtnType = dialog.getDialogPane().getButtonTypes().stream()
-            .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
-            .findFirst().orElse(null);
+        ButtonType crearBtnType = dialog.getDialogPane().getButtonTypes().stream()
+                .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
+                .findFirst().orElse(null);
         
         ChoiceBox<String> tipo = crearChoiceTipo();
         TextField nombre = new TextField();
@@ -38,7 +100,6 @@ public class ProductoDialogs {
         dialog.getDialogPane().setContent(grid);
         
         // Obtener botón OK
-       //ButtonType crearBtn = dialog.getDialogPane().getButtonTypes().get(0);
         Button okButton = (Button) dialog.getDialogPane().lookupButton(crearBtnType);
         //  Evitar que cierre si hay error
         okButton.addEventFilter(ActionEvent.ACTION, event -> {
@@ -182,6 +243,14 @@ public class ProductoDialogs {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+    
+    public static String dialogoSeleccionarAscDes(){
+        ChoiceDialog<String> dialog =
+                new ChoiceDialog<>("Ascendente", "Ascendente", "Descendente");
+        dialog.setTitle("Orden");
+        dialog.setHeaderText("Seleccione el orden: ");
+        return dialog.showAndWait().orElse(null);
+    }    
 
     /* 
      * @brief Muestra un diálogo para seleccionar el criterio de ordenamiento.
@@ -194,7 +263,8 @@ public class ProductoDialogs {
         dialog.setHeaderText("Ordenar por: ");
         return dialog.showAndWait().orElse(null);
     }
-
+    
+    
     /* 
      * @brief Muestra un diálogo para ingresar un filtro de texto.
      * @return El texto ingresado o null si no se ingresa nada.
@@ -205,21 +275,5 @@ public class ProductoDialogs {
         dialog.setHeaderText("Filtro por nombre");
         dialog.setContentText("Ingrese el nombre: ");
         return dialog.showAndWait().orElse(null);
-    }
-
-    /* 
-     * @brief Muestra un diálogo para ingresar un ID de producto.
-     * @return El ID ingresado o -1 si no se ingresa un número válido.
-    */
-    public static int dialogoIngresarId() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Atencion");
-        dialog.setHeaderText("Eliminar producto");
-         dialog.setContentText("Ingrese el ID: ");
-        try {
-            return Integer.parseInt(dialog.showAndWait().orElse("-1"));
-        } catch (Exception e) {
-            return -1;
-        }
     }
 }

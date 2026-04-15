@@ -52,7 +52,7 @@ public class ProductoViewHelper {
      * @param tableView La tabla donde se cargarán los productos.
      * @param inv El inventario del cual se obtendrán los productos.
     */
-    public static void cargarTableView(TableView<Producto> tableView, Inventario inv) {
+    public static void cargarTableView(TableView<Producto> tableView, Inventario inv, ProductoController controller) {
         refreshTableView(tableView, inv);
 
         tableView.setRowFactory(tv -> {
@@ -60,7 +60,7 @@ public class ProductoViewHelper {
             row.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 1 && !row.isEmpty()) {
                     Producto p = row.getItem();
-                    mostrarTarjeta(p);
+                    mostrarTarjeta(p, tableView, controller);
                 }
             });
             return row;
@@ -80,10 +80,14 @@ public class ProductoViewHelper {
      * @brief Muestra una tarjeta con los detalles del producto seleccionado.
      * @param p El producto cuyos detalles se mostrarán.
     */
-    private static void mostrarTarjeta(Producto p) {
+    private static void mostrarTarjeta(Producto p, TableView<Producto> tableView, ProductoController controller) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalles");
         alert.setHeaderText(p.getNombre());
+        
+        ButtonType editarBtn = new ButtonType("✏ Editar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType eliminarBtn = new ButtonType("🗑 Eliminar", ButtonBar.ButtonData.OTHER);
+        alert.getButtonTypes().setAll(editarBtn, eliminarBtn, ButtonType.CLOSE);
 
         String contenido = """
                 ID: %d
@@ -114,9 +118,37 @@ public class ProductoViewHelper {
                     Medida: %.2f m²
                     """.formatted(baldosa.getMaterial(), baldosa.getMedida());
 
-        alert.setContentText(contenido);
-        alert.showAndWait();
     }
-}
-  
+        alert.setContentText(contenido);
+        alert.showAndWait().ifPresent(btn -> {
+            if (btn == editarBtn) {
+                Producto editado = ProductoDialogs.editarProducto(p);
+                
+                if(editado != null){
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Confirmar Edición");
+                    confirm.setHeaderText("¿Desea guardar los cambios?");
+                    confirm.setContentText("El producto: " + p.getNombre() + " va a ser editado.  \n ¿Quiere continuar?");
+                    confirm.setResizable(true);
+                    confirm.getDialogPane().setPrefWidth(500);
+                    if(confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK){
+                        controller.actualizar(p.getId(), editado);
+                        tableView.refresh();
+                    }
+                }
+            } else if (btn == eliminarBtn) {
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Confirmar Eliminación");
+                confirm.setHeaderText("¿Desea eliminar este producto?");
+                confirm.setContentText("El producto: " + p.getNombre()+ " va a ser eliminado.  \n ¿Esta seguro?");
+                confirm.setResizable(true);
+                confirm.getDialogPane().setPrefWidth(500);
+                if(confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK){
+                    controller.eliminar(p.getId());
+                    tableView.getItems().remove(p);
+                    tableView.refresh();
+                }
+            }
+        });
+    }
 }

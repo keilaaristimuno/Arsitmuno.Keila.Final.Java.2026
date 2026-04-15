@@ -30,7 +30,7 @@ public class ProductoController {
                                                 null;
 
         if (service != null) {
-            List<? extends Producto> productos = service.cargar(); // wildcard también aquí
+            List<? extends Producto> productos = service.cargar(); // wildcard 
             for (Producto producto : productos) {
                 gestionProducto.crear(producto);
             }
@@ -57,6 +57,10 @@ public class ProductoController {
         gestionProducto.crear(producto);
     }
     
+    public void actualizar(int id, Producto producto){
+        gestionProducto.actualizar(id, producto);
+    }
+    
     public void eliminar (int id){
         gestionProducto.eliminar(id);
     }
@@ -64,17 +68,10 @@ public class ProductoController {
     //Ordena los productos del inventario por un criterio dado.
     public void ordenar (String criterio){
         switch (criterio){
-            case "Precio":
-                gestionProducto.ordenarPorPrecio();
-                break;
-            case "Stock":
-                gestionProducto.ordenarPorStock();
-                break;
-            case "Nombre":
-                gestionProducto.ordenarPorNombre();
-                break;
-            default:
-                throw new IllegalArgumentException("Criterio de ordenación no válido");
+            case "Precio" -> gestionProducto.ordenarPorPrecio();
+            case "Stock" -> gestionProducto.ordenarPorStock();
+            case "Nombre" -> gestionProducto.ordenarPorNombre();
+            default -> throw new IllegalArgumentException("Criterio de ordenación no válido");
         }
     }
     
