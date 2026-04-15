@@ -11,7 +11,7 @@ import models.enums.Categoria;
 public class ProductoDialogs {
     
      public static Producto editarProducto(Producto p) {
-        Dialog<Producto> dialog = crearDialog();
+        Dialog<Producto> dialog = crearDialog("Editando Producto", "Guardar");
 
         ButtonType okType = dialog.getDialogPane().getButtonTypes().stream()
                 .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
@@ -79,7 +79,7 @@ public class ProductoDialogs {
      * @return El producto creado o null si se cancela el diálogo.     */
 
     public static Producto dialogoCrearProducto(Inventario inv) {
-        Dialog<Producto> dialog = crearDialog();
+        Dialog<Producto> dialog = crearDialog("Crear Producto", "Crear");
         ButtonType crearBtnType = dialog.getDialogPane().getButtonTypes().stream()
                 .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
                 .findFirst().orElse(null);
@@ -122,11 +122,11 @@ public class ProductoDialogs {
     
     //Crea y configura el diálogo base para la creación de un producto, con botones de "Crear" y "Cancelar".
     //@return El diálogo configurado listo para ser personalizado con campos específicos.
-    private static Dialog<Producto> crearDialog() {
+    private static Dialog<Producto> crearDialog(String titulo, String textBoton) {
         Dialog<Producto> dialog = new Dialog<>();
-        dialog.setTitle("Crear Producto");
+        dialog.setTitle(titulo);
         
-        ButtonType crearBtn = new ButtonType("Crear", ButtonBar.ButtonData.OK_DONE);
+        ButtonType crearBtn = new ButtonType(textBoton, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(crearBtn, ButtonType.CANCEL);
 
         return dialog;
