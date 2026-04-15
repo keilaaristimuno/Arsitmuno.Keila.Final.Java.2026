@@ -8,6 +8,7 @@ import exceptions.StockInvalidoException;
 import java.util.List;
 import models.Inventario;
 import models.Producto;
+import java.util.Comparator;
 
 public class GestionProducto {
     private Inventario inventario;
@@ -62,16 +63,19 @@ public class GestionProducto {
     }
     
     //ordena los productos del inventario por precio
-    public void ordenarPorPrecio(){
-        inventario.ordenar(new PrecioComparator());
+    public void ordenarPorPrecio(boolean asc){
+        Comparator <Producto> c = Comparator.comparingDouble(Producto :: getPrecio);
+       inventario.ordenar(asc ? c : c.reversed ());
     }
     
-    public void ordenarPorStock(){
-        inventario.ordenar(new StockComparator());
+    public void ordenarPorStock(boolean asc){
+        Comparator<Producto> c = Comparator.comparingInt(Producto::getStock);
+        inventario.ordenar(asc ? c : c.reversed());
     }
     
-    public void ordenarPorNombre(){
-        inventario.ordenar(new NombreComparator());
+    public void ordenarPorNombre(boolean asc){
+        Comparator<Producto> c = Comparator.comparing(Producto::getNombre);
+        inventario.ordenar(asc ? c : c.reversed());
     }
 
     public Inventario getInventario() {

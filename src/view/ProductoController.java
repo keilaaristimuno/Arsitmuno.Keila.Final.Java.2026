@@ -67,10 +67,15 @@ public class ProductoController {
     
     //Ordena los productos del inventario por un criterio dado.
     public void ordenar (String criterio){
+        String orden = ProductoDialogs.dialogoSeleccionarAscDes();
+        if (orden == null) return;
+        
+        boolean asc = orden.equals("Ascendente");
+        
         switch (criterio){
-            case "Precio" -> gestionProducto.ordenarPorPrecio();
-            case "Stock" -> gestionProducto.ordenarPorStock();
-            case "Nombre" -> gestionProducto.ordenarPorNombre();
+            case "Precio" -> gestionProducto.ordenarPorPrecio(asc);
+            case "Stock" -> gestionProducto.ordenarPorStock(asc);
+            case "Nombre" -> gestionProducto.ordenarPorNombre(asc);
             default -> throw new IllegalArgumentException("Criterio de ordenación no válido");
         }
     }

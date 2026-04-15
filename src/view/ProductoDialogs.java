@@ -244,6 +244,10 @@ public class ProductoDialogs {
         alert.showAndWait();
     }
     
+       /* 
+     * @brief Muestra un diálogo para seleccionar de forma Ascendente o Descendente
+     * @return El criterio seleccionado o null si no se selecciona ninguno.
+    */
     public static String dialogoSeleccionarAscDes(){
         ChoiceDialog<String> dialog =
                 new ChoiceDialog<>("Ascendente", "Ascendente", "Descendente");
